@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bbm;
+use App\Models\Supp;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class BbmController extends Controller
@@ -12,8 +14,12 @@ class BbmController extends Controller
      */
     public function index()
     {
-        $bbms = Bbm::all();
-        return view('bbm.index', compact('bbms'));
+        $supplies =  Supp::orderBy('id', 'desc')->get();
+        $today = Carbon::today()->toDateString();
+        $totalHariIni = Supp::whereDate('tgl_beli', $today)->sum('hrg_total');
+        $supp = Supp::whereDate('tgl_beli', $today)->get();
+
+        return view('welcome', compact('supplies', 'totalHariIni', 'supp', 'today'));
     }
 
     /**
