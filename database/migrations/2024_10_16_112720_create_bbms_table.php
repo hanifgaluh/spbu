@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('bbms', function (Blueprint $table) {
             $table->bigIncrements('kd_bbm');
             $table->string('nm_bbm');
-            $table->integer('hrg_jual');
+            $table->integer('ltr_bbm');
+            $table->decimal('hrg_jual')->nullable();
+            $table->decimal('hrg_beli')->nullable();
         });
     }
 

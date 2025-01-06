@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Supp;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class SuppController extends Controller
 {
@@ -48,6 +49,9 @@ class SuppController extends Controller
         $supp->hrg_total = $request->jml_bbm * $request->hrg_beli;
         $supp->tgl_beli = $request->tgl_beli;
         $supp->save();
+
+        Log::info('Transaction created: ', $supp->toArray());
+
 
         return redirect('/dashboard')->with('success', 'Data berhasil disimpan!');
     }

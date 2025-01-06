@@ -18,29 +18,31 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
 
         Bbm::create([
             'nm_bbm' => 'pertalite',
-            'hrg_jual' => 10000
+            'hrg_jual' => 10000,
+            'hrg_beli' => 8000,
+            'ltr_bbm' => 150
         ]);
 
         Bbm::create([
             'nm_bbm' => 'pertamax',
-            'hrg_jual' => 13000
+            'hrg_jual' => 13000,
+            'hrg_beli' => 10000,
+            'ltr_bbm' => 150
         ]);
 
         Bbm::create([
             'nm_bbm' => 'oli motor matic',
-            'hrg_jual' => 35000
+            'hrg_jual' => 35000,
+            'hrg_beli' => 30000,
+            'ltr_bbm' => 150
         ]);
 
         Supp::create([
             'nm_supp' => 'PT. ABC',
-            'hrg_beli' => 30000,
+            'hrg_beli' => '30000',
             'jml_bbm' => 10,
             'jns_bbm' => 'oli motor matic',
             'hrg_total' => 300000
@@ -61,5 +63,6 @@ class DatabaseSeeder extends Seeder
             'jns_bbm' => 'pertamax',
             'hrg_total' => 1000000
         ]);
+        
     }
 }
