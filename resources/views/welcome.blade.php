@@ -6,6 +6,17 @@
     <title>SPBU Dashboard</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/sytle.css" type="text/css">
+    <script>
+        console.log("Fuel Prices Data:", @json($bbms -> pluck('hrg_jual', 'kd_bbm') -> toArray()));
+
+        window.fuelPrices = @json($bbms -> mapWithKeys(function($bbm) {
+            return [(string) $bbm -> kd_bbm => (float) $bbm -> hrg_jual];
+        }));
+    </script>
+
+
+    <script src="{{ asset('js/main.js') }}" defer></script>
+
 </head>
 
 <body>
@@ -13,6 +24,7 @@
         <div class="header">
             <h1>Dashboard SPBU</h1>
         </div>
+
 
         <div class="stats-container">
             <!-- Row 1: Daily Stats -->
@@ -158,7 +170,7 @@
                                 <td>{{ $supply->jml_bbm }}</td>
                                 <td>Rp {{ number_format($supply->hrg_beli, 0, ',', '.') }}</td>
                                 <td>Rp {{ number_format($supply->hrg_total, 0, ',', '.') }}</td>
-                                </tr>
+                            </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -172,40 +184,90 @@
         <div class="modal-content">
             <span class="close" onclick="closeTransactionModal()">&times;</span>
             <h2>Tambah Transaksi</h2>
-            <form id="transactionForm">
-                <div class="form-group">
-                    <label>Nama Pembeli:</label>
-                    <input type="text" name="customerName" required>
+
+            <!-- Indikator Langkah -->
+            <div class="steps-indicator">
+                <span class="step active" id="step1-indicator">1</span>
+                <span class="step" id="step2-indicator">2</span>
+            </div>
+
+            <!-- Form Multi-Step -->
+            <form action="{{ route('transactions.store') }}" method="POST" id="transactionForm">
+                @csrf
+
+                <!-- Step 1: Data Pembeli -->
+                <div id="step1" class="step">
+                    <div class="form-group">
+                        <label>Nama Pembeli:</label>
+                        <input type="text" id="nm_pel" name="nm_pel" value="{{ old('nm_pel') }}" required>
+                        @error('nm_pel')
+                        <span class="error">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label>Email Pembeli:</label>
+                        <input type="email" id="email_pel" name="email_pel" value="{{ old('email') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>No. HP Pembeli:</label>
+                        <input type="text" id="telp_pel" name="telp_pel" value="{{ old('telp_pel') }}" required>
+                        @error('telp_pel')
+                        <span class="error">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label>Tanggal Transaksi:</label>
+                        <input type="date" id="tgl_beli" name="tgl_beli" value="{{ old('tgl_beli') }}" required>
+                        @error('tgl_beli')
+                        <span class="error">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <button type="button" class="btn" onclick="nextStep(2)">Next</button>
                 </div>
-                <div class="form-group">
-                    <label>Jenis BBM:</label>
-                    <select name="fuelType" onchange="updatePrice()" required>
-                        <option value="">Pilih BBM</option>
-                        <option value="pertalite">Pertalite</option>
-                        <option value="pertamax">Pertamax</option>
-                        <option value="solar">Solar</option>
-                    </select>
+
+                <!-- Step 2: Detail Transaksi -->
+                <div id="step2" class="step" style="display: none;">
+                    <div class="form-group">
+                        <label>Jenis BBM:</label>
+                        <select id="fuelType" name="kd_bbm" onchange="updatePrice()" required>
+                            <option value="">Pilih BBM</option>
+                            @foreach ($bbms as $bbm)
+                            <option value="{{ $bbm->kd_bbm }}" {{ old('kd_bbm') == $bbm->kd_bbm ? 'selected' : '' }}>
+                                {{ $bbm->nm_bbm }}
+                            </option>
+                            @endforeach
+                        </select>
+
+
+                        @error('kd_bbm')
+                        <span class="error">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label>Jumlah Liter:</label>
+                        <input type="number" id="liters" name="qty_dtl_jual" value="{{ old('qty_dtl_jual') }}" oninput="calculateTotal()" required>
+                        @error('liters')
+                        <span class="error">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label>Harga per Liter:</label>
+                        <input type="number" id="pricePerLiter" name="hrg_jual" value="{{ old('hrg_jual') }}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Total Harga:</label>
+                        <input type="number" id="totalPrice" name="tot_jual" value="{{ old('totalPrice') }}" readonly>
+                    </div>
+                    <button type="button" class="btn" onclick="prevStep(1)">Back</button>
+                    <br>
+                    <button type="submit" class="btn">Simpan</button>
                 </div>
-                <div class="form-group">
-                    <label>Jumlah Liter:</label>
-                    <input type="number" name="liters" oninput="calculateTotal()" required>
-                </div>
-                <div class="form-group">
-                    <label>Harga per Liter:</label>
-                    <input type="number" name="pricePerLiter" readonly>
-                </div>
-                <div class="form-group">
-                    <label>Total Harga:</label>
-                    <input type="number" name="totalPrice" readonly>
-                </div>
-                <div class="form-group">
-                    <label>Tanggal Transaksi:</label>
-                    <input type="date" name="transactionDate" required>
-                </div>
-                <button type="submit" class="btn">Simpan</button>
             </form>
         </div>
     </div>
+
+
 
     <!-- Modal Supply -->
     <!-- Modal untuk Tambah Supply -->

@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('supps', function (Blueprint $table) {
-            $table->id();
-            $table->string('nm_supp');
+            $table->id('id_supp')->primary()->autoIncrement();
+            $table->string('nm_supp', 100);
             $table->string('jns_bbm');
-            $table->integer('jml_bbm');
+            $table->decimal('jml_bbm');
             $table->decimal('hrg_beli');
             $table->decimal('hrg_total', 10, 2)->nullable();
             $table->date('tgl_beli')->nullable();

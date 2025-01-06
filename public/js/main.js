@@ -1,16 +1,29 @@
 // Harga BBM
-const fuelPrices = {
-    pertalite: 10000,
-    pertamax: 12500,
-    solar: 6800
-};
+// const fuelPrices = {
+//     pertalite: 10000,
+//     pertamax: 12500,
+//     solar: 6800
+// };
 
 // Harga Supply
-const supplyPrices = {
-    pertalite: 9000,
-    pertamax: 11500,
-    solar: 6000
-};
+// const supplyPrices = {
+//     pertalite: 9000,
+//     pertamax: 11500,
+//     solar: 6000
+// };
+
+function nextStep(step) {
+    showStep(step);
+}
+
+function showStep(step) {
+    document.querySelectorAll('.step').forEach(stepDiv => stepDiv.style.display = 'none');
+    document.getElementById(`step${step}`).style.display = 'block';
+}
+
+function prevStep(step) {
+    showStep(step);
+}
 
 function showTransactionForm() {
     document.getElementById('transactionModal').style.display = 'block';
@@ -42,26 +55,12 @@ function calculateTotal() {
     form.totalPrice.value = liters * pricePerLiter || 0;
 }
 
-// function updateSupplyPrice() {
-//     const form = document.getElementById('supplyForm');
-//     const fuelType = form.fuelType.value;
-//     form.pricePerLiter.value = supplyPrices[fuelType] || '';
-//     calculateSupplyTotal();
-// }
-
-// function calculateSupplyTotal() {
-//     const form = document.getElementById('supplyForm');
-//     const liters = form.liters.value;
-//     const pricePerLiter = form.pricePerLiter.value;
-//     form.totalPrice.value = liters * pricePerLiter || 0;
-// }
-
 // Event Listeners untuk form submissions
-document.getElementById('transactionForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    // Implementasi logika penyimpanan data transaksi
-    closeTransactionModal();
-});
+// document.getElementById('transactionForm').addEventListener('submit', function(e) {
+//     e.preventDefault();
+//     // Implementasi logika penyimpanan data transaksi
+//     closeTransactionModal();
+// });
 
 // document.getElementById('supplyForm').addEventListener('submit', function(e) {
 //     e.preventDefault();
@@ -125,21 +124,21 @@ function addSupplyToLog(supply) {
 }
 
 // Update your form submission handlers
-document.getElementById('transactionForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const formData = new FormData(this);
-    const transaction = {
-        date: formData.get('transactionDate'),
-        customerName: formData.get('customerName'),
-        fuelType: formData.get('fuelType'),
-        liters: formData.get('liters'),
-        pricePerLiter: parseInt(formData.get('pricePerLiter')),
-        totalPrice: parseInt(formData.get('totalPrice'))
-    };
-    addTransactionToLog(transaction);
-    closeTransactionModal();
-    this.reset();
-});
+// document.getElementById('transactionForm').addEventListener('submit', function(e) {
+//     e.preventDefault();
+//     const formData = new FormData(this);
+//     const transaction = {
+//         date: formData.get('transactionDate'),
+//         customerName: formData.get('customerName'),
+//         fuelType: formData.get('fuelType'),
+//         liters: formData.get('liters'),
+//         pricePerLiter: parseInt(formData.get('pricePerLiter')),
+//         totalPrice: parseInt(formData.get('totalPrice'))
+//     };
+//     addTransactionToLog(transaction);
+//     closeTransactionModal();
+//     this.reset();
+// });
 
 // document.getElementById('supplyForm').addEventListener('submit', function(e) {
 //     e.preventDefault();
@@ -156,3 +155,27 @@ document.getElementById('transactionForm').addEventListener('submit', function(e
 //     closeSupplyModal();
 //     this.reset();
 // });
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Fungsi untuk memperbarui harga per liter berdasarkan pilihan BBM
+    window.updatePrice = function () {
+        const fuelType = document.getElementById('fuelType').value;
+        console.log("Selected fuel type:", fuelType); // Debugging
+    
+        const pricePerLiter = window.fuelPrices[fuelType] || 0;
+        console.log("Price per liter:", pricePerLiter); // Debugging
+    
+        document.getElementById('pricePerLiter').value = pricePerLiter;
+        calculateTotal();
+    };
+    
+    
+    
+
+    // Fungsi untuk menghitung total harga berdasarkan jumlah liter dan harga per liter
+    window.calculateTotal = function () {
+        const liters = parseFloat(document.getElementById('liters').value) || 0;
+        const pricePerLiter = parseFloat(document.getElementById('pricePerLiter').value) || 0;
+        document.getElementById('totalPrice').value = liters * pricePerLiter;
+    };
+});

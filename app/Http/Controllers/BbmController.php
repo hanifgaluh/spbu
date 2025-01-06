@@ -14,17 +14,19 @@ class BbmController extends Controller
      */
     public function index()
     {
-        $supplies =  Supp::orderBy('id', 'desc')->get();
+        $supplies =  Supp::orderBy('id_supp', 'desc')->get();
         $today = Carbon::today()->toDateString();
         $totalHariIni = Supp::whereDate('tgl_beli', $today)->sum('hrg_total');
         $supp = Supp::whereDate('tgl_beli', $today)->get();
+        $bbms = Bbm::all();
 
-        return view('welcome', compact('supplies', 'totalHariIni', 'supp', 'today'));
+        return view('welcome', compact('supplies', 'totalHariIni', 'supp', 'today', 'bbms'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
+
     public function create()
     {
         return view('bbm.create');
