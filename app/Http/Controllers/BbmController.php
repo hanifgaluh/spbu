@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bbm;
+use App\Models\Profit;
 use App\Models\Supp;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -16,11 +18,18 @@ class BbmController extends Controller
     {
         $supplies =  Supp::orderBy('id_supp', 'desc')->get();
         $today = Carbon::today()->toDateString();
+        $bulanIni = Carbon::now()->format('Y-m');
         $totalHariIni = Supp::whereDate('tgl_beli', $today)->sum('hrg_total');
+        $totalBulanIni = Supp::where('tgl_beli', 'like', '%' . $bulanIni . '%')->sum('hrg_total');
         $supp = Supp::whereDate('tgl_beli', $today)->get();
         $bbms = Bbm::all();
+        $profitToday = Profit::whereDate('created_at', $today)->sum('profit');
+        $profitBulanIni = Profit::where('created_at', 'like', '%' . $bulanIni . '%')->sum('profit');
+        $userToday = User::whereDate('created_at', $today)->count();
 
-        return view('welcome', compact('supplies', 'totalHariIni', 'supp', 'today', 'bbms'));
+
+
+        return view('welcome', compact('supplies', 'totalHariIni', 'supp', 'today', 'bbms', 'profitToday', 'profitBulanIni', 'totalBulanIni', 'userToday'));
     }
 
     /**

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bbm;
+use App\Models\Dtl_jual;
+use App\Models\DtlJual;
+use App\Models\Profit;
 use App\Models\Transaksi;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -39,6 +42,9 @@ class TransaksiController extends Controller
             'kd_bbm' => 'required',
             'telp_pel' => 'required',
             'tot_jual' => 'required',
+            'qty_dtl_jual' => 'required',
+            'kd_bbm' => 'required',
+
 
         ]);
 
@@ -56,12 +62,41 @@ class TransaksiController extends Controller
 
         $latestUser = User::latest()->first();
         $transaction = Transaksi::create([
-                'id_pel' => $latestUser->id_pel, // Jika tabel `contacts` punya relasi ke `users`
-                'tgl_beli' => $validated['tgl_beli'],
-            ]);
-    
+            'id_pel' => $latestUser->id_pel, // Jika tabel `contacts` punya relasi ke `users`
+            'tgl_beli' => $validated['tgl_beli'],
+            'tot_jual' => $validated['tot_jual'],
+        ]);
+
 
         Log::info('Transaction created: ', $transaction->toArray());
+
+        $latestJual = Transaksi::latest()->first();
+        $qty_bbm = DtlJual::create([
+            'qty_dtl_jual' => $validated['qty_dtl_jual'],
+            'id_jual' => $latestJual->id_jual,
+            'kd_bbm' => $validated['kd_bbm'],
+        ]);
+        
+        Log::info('Dtl_jual created: ', $qty_bbm->toArray());
+        
+        $kodeBbm = Bbm::where('kd_bbm', $validated['kd_bbm'])->first();
+
+        if (!$kodeBbm) {
+            return redirect()->back()->withErrors('Kode BBM tidak ditemukan!');
+        }
+
+        $tot_beli = $kodeBbm->hrg_beli * $validated['qty_dtl_jual'];
+        $profit = $validated['tot_jual'] - $tot_beli;
+
+        $profitDb = Profit::create([
+            'tot_beli' => $tot_beli,
+            'tot_jual' => $validated['tot_jual'],
+            'profit' => $profit
+        ]);
+
+        Log::info('Profit created: ', $profitDb->toArray());
+
+
 
 
 
