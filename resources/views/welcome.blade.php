@@ -31,12 +31,12 @@
             <div class="stats-row">
                 <div class="stat-card">
                     <i class="fas fa-users"></i>
-                    <div class="stat-value">150</div>
+                    <div class="stat-value">{{ $userToday }}</div>
                     <div class="stat-label">Pembeli Hari Ini</div>
                 </div>
                 <div class="stat-card">
                     <i class="fas fa-money-bill-wave"></i>
-                    <div class="stat-value">Rp 5.000.000</div>
+                    <div class="stat-value">Rp {{ number_format($profitToday, 0, ',', '.') }}</div>
                     <div class="stat-label">Profit Hari Ini</div>
                 </div>
                 <div class="stat-card">
@@ -50,12 +50,14 @@
             <div class="stats-row-secondary">
                 <div class="stat-card">
                     <i class="fas fa-calendar-check"></i>
-                    <div class="stat-value">Rp 150.000.000</div>
+                    <div class="stat-value">Rp {{ number_format(                    $profitBulanIni
+                        , 0, ',', '.') }}</div>
                     <div class="stat-label">Profit Bulan Ini</div>
                 </div>
                 <div class="stat-card">
                     <i class="fas fa-calendar-minus"></i>
-                    <div class="stat-value">Rp 60.000.000</div>
+                    <div class="stat-value">Rp {{ number_format(                    $totalBulanIni
+                        , 0, ',', '.') }}</div>
                     <div class="stat-label">Pengeluaran Bulan Ini</div>
                 </div>
             </div>

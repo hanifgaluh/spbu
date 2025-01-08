@@ -13,7 +13,11 @@ class Transaksi extends Model
         'jml_bbm',
         'jns_bbm',
         'hrg_total',
-        'tgl_beli'
+        'tgl_beli',
+        'tot_jual',
+        'hrg_jual',
+        'qty_dtl_jual',
+        'kd_bbm',
     ];
 
     public function user()

@@ -173,9 +173,13 @@ document.addEventListener('DOMContentLoaded', () => {
     
 
     // Fungsi untuk menghitung total harga berdasarkan jumlah liter dan harga per liter
-    window.calculateTotal = function () {
-        const liters = parseFloat(document.getElementById('liters').value) || 0;
-        const pricePerLiter = parseFloat(document.getElementById('pricePerLiter').value) || 0;
-        document.getElementById('totalPrice').value = liters * pricePerLiter;
-    };
+    function calculateTotal() {
+        const liters = parseFloat(document.getElementById("liters").value) || 0;
+        const pricePerLiter = parseFloat(document.getElementById("pricePerLiter").value) || 0;
+        const total = liters * pricePerLiter;
+    
+        console.log("Total Harga:", total);
+        document.getElementById("tot_jual").value = total;
+    }
+    
 });
