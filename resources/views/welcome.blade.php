@@ -82,7 +82,7 @@
                     </div>
                     <div class="fuel-info">
                         <span>Tersedia:</span>
-                        <span class="fuel-amount">7.500 Liter</span>
+                        <span class="fuel-amount">{{ $bbms -> where('kd_bbm', '1') -> first() -> ltr_bbm }} Liter</span>
                     </div>
                 </div>
                 <div>
@@ -92,7 +92,7 @@
                     </div>
                     <div class="fuel-info">
                         <span>Tersedia:</span>
-                        <span class="fuel-amount">6.000 Liter</span>
+                        <span class="fuel-amount">{{ $bbms -> where('kd_bbm', '2') -> first() -> ltr_bbm }} Literr</span>
                     </div>
                 </div>
                 <div>
@@ -102,7 +102,7 @@
                     </div>
                     <div class="fuel-info">
                         <span>Tersedia:</span>
-                        <span class="fuel-amount">8.500 Liter</span>
+                        <span class="fuel-amount">{{ $bbms -> where('kd_bbm', '3') -> first() -> ltr_bbm }} Liter</span>
                     </div>
                 </div>
             </div>

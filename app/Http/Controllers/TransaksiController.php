@@ -96,6 +96,13 @@ class TransaksiController extends Controller
 
         Log::info('Profit created: ', $profitDb->toArray());
 
+        $penyimpananAwal = $kodeBbm->ltr_bbm;
+        $penyimpananAkhir = $penyimpananAwal - $validated['qty_dtl_jual'];
+
+        $kodeBbm->update([
+            'ltr_bbm' => $penyimpananAkhir
+        ]);
+
 
 
 
