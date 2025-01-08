@@ -10,6 +10,6 @@ class Bbm extends Model
     protected $primaryKey = 'kd_bbm';
     protected $keyType = 'string';
 
-    protected $fillable = ['nm_bbm', 'hrg_jual'];
+    protected $fillable = ['nm_bbm', 'hrg_jual', 'hrg_beli', 'ltr_bbm'];
 
 }
